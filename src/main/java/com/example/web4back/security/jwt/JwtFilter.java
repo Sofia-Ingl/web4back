@@ -20,29 +20,40 @@ public class JwtFilter extends GenericFilterBean {
 
     public static final String AUTHORIZATION = "Authorization";
 
+    private final JwtProvider jwtProvider;
+    private final CustomUserDetailsService customUserDetailsService;
+
     @Autowired
-    private JwtProvider jwtProvider;
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    public JwtFilter(JwtProvider provider, CustomUserDetailsService userDetailsService) {
+        this.jwtProvider = provider;
+        this.customUserDetailsService = userDetailsService;
+    }
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         logger.info("do filter...");
-        String token = getTokenFromRequest((HttpServletRequest) servletRequest);
-        if (token != null && jwtProvider.validateToken(token)) {
-            String userLogin = jwtProvider.getLoginFromToken(token);
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userLogin);
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, null);
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        try {
+            String token = getTokenFromRequest((HttpServletRequest) servletRequest);
+            if (token != null && jwtProvider.validateToken(token)) {
+                String userLogin = jwtProvider.getLoginFromToken(token);
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(userLogin);
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, null);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+        } catch (Exception e) {
+            logger.error("Cannot set user auth: " + e.getMessage());
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader(AUTHORIZATION);
-        if (bearer!=null && bearer.startsWith("Bearer ")) {
+        if (bearer != null && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
         return null;
     }
+
+
 }
+

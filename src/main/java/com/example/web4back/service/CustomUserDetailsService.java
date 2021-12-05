@@ -11,12 +11,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
+    private UserRepository userRepository;
+
     @Autowired
-    private UserRepository dao;
+    public CustomUserDetailsService(UserRepository repository) {
+        this.userRepository = repository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        UserBean myUser = dao.findByLogin(userName);
+        UserBean myUser = userRepository.findByLogin(userName);
         if (myUser == null) {
             throw new UsernameNotFoundException("Unknown user: " + userName);
         }

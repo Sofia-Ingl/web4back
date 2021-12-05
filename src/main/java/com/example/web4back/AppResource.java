@@ -8,6 +8,7 @@ import com.example.web4back.util.StatusObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -19,11 +20,13 @@ public class AppResource {
     private final UserService userService;
     private final JwtProvider jwtProvider;
 
-    @Autowired
-    public AppResource(UserService userService, JwtProvider jwtProvider) {
+
+    public AppResource(@Autowired UserService userService, @Autowired JwtProvider jwtProvider) {
         this.userService = userService;
         this.jwtProvider = jwtProvider;
     }
+
+
 
 //    @PostMapping("/register")
 //    public ResponseEntity<StatusObject> tryRegister(@RequestParam(value = "login") String name,
