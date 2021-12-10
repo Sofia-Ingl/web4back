@@ -13,7 +13,6 @@ public class UserBean implements Serializable {
     private Long id;
     private String login;
     private String password;
-//    private String role;
 
     public UserBean() {
     }
@@ -34,10 +33,7 @@ public class UserBean implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-//
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
+
 
     public String getLogin() {
         return login;
@@ -50,10 +46,6 @@ public class UserBean implements Serializable {
     public Long getId() {
         return id;
     }
-//
-//    public String getRole() {
-//        return role;
-//    }
 
     @Override
     public String toString() {

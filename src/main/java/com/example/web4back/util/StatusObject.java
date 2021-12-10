@@ -2,12 +2,14 @@ package com.example.web4back.util;
 
 public class StatusObject {
 
+    private String name;
     private boolean success;
     private String token;
 
-    public StatusObject(boolean success, String token) {
+    public StatusObject(boolean success, String token, String name) {
         this.success = success;
         this.token = token;
+        this.name = name;
     }
 
     public void setSuccess(boolean success) {
@@ -16,6 +18,14 @@ public class StatusObject {
 
     public boolean isSuccess() {
         return success;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getToken() {

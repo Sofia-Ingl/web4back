@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -18,17 +20,9 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-//    private UserBean addUser(UserBean user) {
-//        return userRepository.save(user);
-//    }
-
     private void saveUser(UserBean user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-    }
-
-    private UserBean findByLogin(String login) {
-        return userRepository.findByLogin(login);
     }
 
     private UserBean findByLoginAndPassword(String login, String password) {
@@ -39,6 +33,10 @@ public class UserService {
             }
         }
         return null;
+    }
+
+    public UserBean findByLogin(String login) {
+        return userRepository.findByLogin(login);
     }
 
     public boolean register(UserBean user) {
@@ -55,6 +53,11 @@ public class UserService {
         System.out.println("Login: " + matches);
         System.out.println(user);
         return matches;
+    }
+
+    public UserBean getById(Long id) {
+        Optional<UserBean> userBean = userRepository.findById(id);
+        return userBean.orElse(null);
     }
 
 
