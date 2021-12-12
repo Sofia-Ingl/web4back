@@ -43,8 +43,18 @@ public class MainController {
     }
 
     @CrossOrigin
+    @PostMapping("/clear")
+    public List<EntryBean> clearAll(@RequestBody StatusObject statusObject) {
+        UserBean user = userService.findByLogin(statusObject.getName());
+        if (user != null) {
+            entryService.clearAllEntries(user);
+        }
+        return new ArrayList<>();
+    }
+
+    @CrossOrigin
     @PostMapping("/get-all")
-    public List<EntryBean> addEntry(@RequestBody StatusObject statusObject) {
+    public List<EntryBean> getAll(@RequestBody StatusObject statusObject) {
         UserBean user = userService.findByLogin(statusObject.getName());
         if (user != null) {
             return entryService.getAllEntries(user);

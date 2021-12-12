@@ -6,7 +6,9 @@ import com.example.web4back.repository.EntryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EntryService {
@@ -24,5 +26,10 @@ public class EntryService {
 
     public List<EntryBean> getAllEntries(UserBean userBean) {
         return entryRepository.findAllByUser(userBean);
+    }
+
+    public void clearAllEntries(UserBean user) {
+        List<Long> ids = (List<Long>) entryRepository.findAllByUser(user).stream().map(EntryBean::getId).collect(Collectors.toList());
+        entryRepository.deleteAllByIdInBatch(ids);
     }
 }
